@@ -1,27 +1,16 @@
 "use client";
 
+import { FetchBackend } from "@/utils/fetch";
 import { useEffect, useState, useRef } from "react";
 
 
 async function submitReview(watchID: string, isMusic: boolean) {
-    const address = process.env.SERVER || "localhost:8000";
-    const url = `http://${address}/review/music`;
-    const token = localStorage.getItem("authToken");
-    const res = await fetch(url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Token ${token}`,
-        },
-        body: JSON.stringify({
-            watchID: watchID,
-            is_music: isMusic,
-        }),
-    })
-    if (!res.ok) {
-        console.error("Failed to submit review:", res.statusText);
-        return;
-    }
+    FetchBackend.post("/review/music", {
+        watchID: watchID,
+        is_music: isMusic,
+    }).catch(error => {
+        console.error("Error submitting review:", error);
+    });
 }
 
 export default function Page() {
@@ -32,10 +21,7 @@ export default function Page() {
     }, [res]);
 
     function showNext() {
-        const address = process.env.SERVER || "localhost:8000";
-        const url = `http://${address}/videos?limit=1&onlyUnreviewed=true&sortBy=random`;
-        fetch(url)
-            .then(response => response.json())
+        FetchBackend.get("/videos", { limit: "1", onlyUnreviewed: "true", sortBy: "random" })
             .then(data => {
                 setRes(data[0]);
             })

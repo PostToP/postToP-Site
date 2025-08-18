@@ -1,5 +1,5 @@
 export class FetchBackend {
-    static _server: string = process.env.SERVER || "http://localhost:8000";
+    static _server: string = process.env.NEXT_PUBLIC_SERVER || "http://localhost:8000";
 
     static async post(url: string, body: any) {
         const fullUrl = `${FetchBackend._server}${url}`;

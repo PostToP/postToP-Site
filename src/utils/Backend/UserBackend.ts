@@ -29,4 +29,11 @@ export default class UserBackend extends Backend {
             }
         );
     }
+
+    static async getUserStats(user_handle: string, filters: Partial<{ startDate: string; endDate: string }> = {}): Promise<BackendResponse<any>> {
+        return UserBackend.GET(
+            `/user/${user_handle}/stats`
+            , filters
+        );
+    }
 }

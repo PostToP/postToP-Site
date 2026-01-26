@@ -1,6 +1,6 @@
 import UserBackend from "@/utils/Backend/UserBackend";
-import ArtistCard from "../Card/ArtistCard";
 import { useEffect, useState } from "react";
+import ArtistCard from "../Card/ArtistCard";
 
 export default function TopArtistShowcase({
     user_handle,
@@ -29,7 +29,7 @@ export default function TopArtistShowcase({
     return (
         <div className={"grid gap-5 md:grid-cols-3"}>
             {topArtists.slice(0, 3).map((artist, i) => (
-                <ArtistCard key={i} artist={artist} />
+                <ArtistCard key={`top-artist-${i}`} artist={artist} />
             ))}
         </div>
     );

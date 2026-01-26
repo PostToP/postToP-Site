@@ -30,7 +30,10 @@ export class Backend {
         };
 
         if ((method === "GET" || method === "DELETE") && queryParamsOrBody) {
-            url += `?${new URLSearchParams(queryParamsOrBody as Record<string, string>).toString()}`;
+            const filteredParams = Object.fromEntries(
+                Object.entries(queryParamsOrBody).filter(([_, v]) => v !== undefined)
+            );
+            url += `?${new URLSearchParams(filteredParams as Record<string, string>).toString()}`;
         } else if (method === "POST" || method === "PUT" || method === "PATCH") {
             options.headers = {
                 ...options.headers,

@@ -2,21 +2,24 @@ import { User } from "@/context/AuthContext";
 import { Backend, type BackendResponse } from "./Backend";
 
 export default class UserBackend extends Backend {
-    static async getUserTopMusic(handle: string): Promise<BackendResponse<any[]>> {
+    static async getUserTopMusic(handle: string, filters: Partial<{ startDate: string; endDate: string }> = {}): Promise<BackendResponse<any[]>> {
         return UserBackend.GET(`/user/${handle}/top`, {
             type: "music",
+            ...filters,
         });
     }
 
-    static async getUserTopArtists(handle: string): Promise<BackendResponse<any[]>> {
+    static async getUserTopArtists(handle: string, filters: Partial<{ startDate: string; endDate: string }> = {}): Promise<BackendResponse<any[]>> {
         return UserBackend.GET(`/user/${handle}/top`, {
             type: "artist",
+            ...filters
         });
     }
 
-    static async getUserTopGenres(handle: string): Promise<BackendResponse<any[]>> {
+    static async getUserTopGenres(handle: string, filters: Partial<{ startDate: string; endDate: string }> = {}): Promise<BackendResponse<any[]>> {
         return UserBackend.GET(`/user/${handle}/top`, {
             type: "genre",
+            ...filters
         });
     }
 

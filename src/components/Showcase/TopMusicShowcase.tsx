@@ -1,17 +1,23 @@
 import UserBackend from "@/utils/Backend/UserBackend";
-import MusicCard from "../Card/MusicCard";
 import { useEffect, useState } from "react";
+import MusicCard from "../Card/MusicCard";
+import { DateRange } from "../Misc/DateSelector";
 
 export default function TopMusicShowcase({
     user_handle,
+    dateRange,
 }: {
     user_handle: string;
+    dateRange: DateRange | null;
 }) {
     const [topMusic, setTopMusic] = useState<any[]>([]);
 
     useEffect(() => {
         async function fetchTopMusic() {
-            const response = await UserBackend.getUserTopMusic(user_handle);
+            const response = await UserBackend.getUserTopMusic(user_handle, {
+                startDate: dateRange?.startDate.toISOString() ?? undefined,
+                endDate: dateRange?.endDate.toISOString() ?? undefined,
+            });
             if (response.ok) {
                 setTopMusic(response.data);
             } else {
@@ -19,7 +25,7 @@ export default function TopMusicShowcase({
             }
         }
         fetchTopMusic();
-    }, [user_handle]);
+    }, [user_handle, dateRange]);
 
     if (topMusic.length < 4) {
         return <div>Loading top music...</div>;

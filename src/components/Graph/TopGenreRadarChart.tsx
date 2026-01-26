@@ -1,6 +1,7 @@
 import UserBackend from "@/utils/Backend/UserBackend";
 import { useEffect, useState } from "react";
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts";
+import { DateRange } from "../Misc/DateSelector";
 
 export interface TopGenre {
     genre_name: string
@@ -8,17 +9,22 @@ export interface TopGenre {
 }
 
 
-export default function TopGenreShowcase({
-    user_handle
+export default function TopGenreRadarChart({
+    user_handle,
+    dateRange
 }: {
     user_handle: string;
+    dateRange: DateRange | null;
 }) {
     const [topGenres, setTopGenres] = useState<any[]>([]);
 
 
     useEffect(() => {
         async function fetchTopGenres() {
-            const response = await UserBackend.getUserTopGenres(user_handle);
+            const response = await UserBackend.getUserTopGenres(user_handle, {
+                startDate: dateRange?.startDate.toISOString() ?? undefined,
+                endDate: dateRange?.endDate.toISOString() ?? undefined,
+            });
             if (response.ok) {
                 response.data = response.data.map((genre: TopGenre) => {
                     genre.genre_name = genre.genre_name.replace("https://en.wikipedia.org/wiki/", "").replace(/_/g, " ");
@@ -32,7 +38,7 @@ export default function TopGenreShowcase({
         }
 
         fetchTopGenres();
-    }, [user_handle]);
+    }, [user_handle, dateRange]);
 
     return (
         <>

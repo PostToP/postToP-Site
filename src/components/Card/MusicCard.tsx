@@ -1,5 +1,5 @@
 import Link from "next/dist/client/link"
-import YoutubeThumbnail, { ThumbnailQuality } from "../YoutubeThumbnail"
+import YoutubeThumbnail, { ThumbnailQuality } from "../Misc/YoutubeThumbnail"
 
 export interface ListenedMusic {
     yt_id: string

@@ -2,19 +2,10 @@ import { formatTimeAgo } from "@/utils/Date"
 import YoutubeThumbnail, { ThumbnailQuality } from "../Misc/YoutubeThumbnail"
 
 export interface ListenedMusic {
-    video_id: string
-    user_id: number
-    listened_at: string
-    id: string
     yt_id: string
-    channel_id: number
-    duration: number
-    main_category_id: number
-    default_language: string
-    language: string
-    title: string
-    description: string
-    name: string
+    listened_at: string
+    video_title: string
+    artist_name: string
 }
 
 export default function ListenedCard({
@@ -42,10 +33,10 @@ export default function ListenedCard({
                         <h3
                             className={"line-clamp-1 font-medium"}
                         >
-                            {music.title}
+                            {music.video_title}
                         </h3>
                         <p className={"line-clamp-1 text-sm text-text-secondary"}>
-                            {music.name.replace(" - Topic", "")}
+                            {music.artist_name.replace(" - Topic", "")}
                         </p>
                     </div>
                     <div className={"text-text-secondary line-clamp-1 text-sm content-center"}>

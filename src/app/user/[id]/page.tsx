@@ -1,4 +1,5 @@
 "use client";
+import CurrentlyListeningCard from "@/components/Card/CurrentlyListeningCard";
 import ListenedGraph from "@/components/Graph/ListenedGraph";
 import TopGenreRadarChart from "@/components/Graph/TopGenreRadarChart";
 import ListenHistory from "@/components/List/ListenHistory";
@@ -16,6 +17,7 @@ export default function UserPage(
 
     return (
         <main>
+            <CurrentlyListeningCard user_handle={id} />
             <DateSelector onDateChange={(dateRange) => {
                 setDateRange(dateRange);
             }} />

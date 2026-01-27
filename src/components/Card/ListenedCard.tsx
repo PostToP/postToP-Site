@@ -14,6 +14,7 @@ export interface ListenedMusic {
     language: string
     title: string
     description: string
+    name: string
 }
 
 export default function ListenedCard({
@@ -44,7 +45,7 @@ export default function ListenedCard({
                             {music.title}
                         </h3>
                         <p className={"line-clamp-1 text-sm text-text-secondary"}>
-                            TEMP
+                            {music.name.replace(" - Topic", "")}
                         </p>
                     </div>
                     <div className={"text-text-secondary line-clamp-1 text-sm content-center"}>

@@ -1,0 +1,18 @@
+@theme {
+    --color-background: #0E1116;
+    --color-surface: #151A21;
+    --color-surface-secondary: #1B212A;
+    --color-border: #232A35;
+    --color-text: #E6E9EE;
+    --color-text-secondary: #9AA4B2;
+    --color-disabled: #5F6B7A;
+    --color-accent-primary: #8B5CF6;
+    --color-accent-secondary: #22C55E;
+    --color-accent-tertiary: #F59E0B;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-text);
+  border-color: var(--color-border)
+}

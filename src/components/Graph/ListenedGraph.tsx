@@ -1,4 +1,5 @@
 import UserBackend from '@/utils/Backend/UserBackend';
+import { formatDate } from '@/utils/Date';
 import { useEffect, useState } from 'react';
 import { Area, AreaChart, Legend, Tooltip, XAxis, YAxis } from 'recharts';
 import { DateRange } from '../Misc/DateSelector';
@@ -23,11 +24,14 @@ export default function ListenedGraph({
                 const daysMap: { [key: string]: any } = {};
                 for (let d = new Date(start); d <= end; d = new Date(d.getTime() + dayInMs)) {
                     const dayStr = d.toISOString().split('T')[0];
-                    daysMap[dayStr] = { day: dayStr, total_seconds: 0 };
+                    daysMap[dayStr] = { day: dayStr, total_minutes: 0 };
                 }
                 for (const segment of response.data.listen_segments) {
                     const dayStr = new Date(segment.day).toISOString().split('T')[0];
-                    daysMap[dayStr] = segment;
+                    daysMap[dayStr] = {
+                        day: dayStr,
+                        total_minutes: Math.round(segment.total_seconds / 60 * 100) / 100,
+                    };
                 }
                 response.data.listen_segments = Object.values(daysMap);
                 setData(response.data);
@@ -54,14 +58,13 @@ export default function ListenedGraph({
             >
                 <XAxis
                     dataKey="day"
-                    tickFormatter={(value) => new Date(value).toLocaleDateString()}
+                    tickFormatter={(value) => formatDate(new Date(value))}
                 />
-                <YAxis width="auto" />
+                <YAxis width={30} />
                 <Tooltip
-                    labelFormatter={(value) => new Date(value).toLocaleDateString()}
+                    labelFormatter={(value) => formatDate(new Date(value))}
                 />
-                <Legend />
-                <Area type="bump" dataKey="total_seconds" stroke="#82ca9d" fill="#82ca9d" name="Listening Time (seconds)" />
+                <Area type="bump" dataKey="total_minutes" stroke="#82ca9d" fill="#82ca9d" name="Listening Time (minutes)" />
             </AreaChart>
         </>
     );

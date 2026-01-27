@@ -13,42 +13,32 @@ export default function ArtistCard({ artist }: { artist: TopArtists }) {
     return (
         <div
             className={
-                "group relative h-full w-full content-center overflow-hidden rounded-lg border border-gray-800 transition-transform hover:scale-105"
+                "w-full content-center overflow-hidden hover:bg-surface-secondary transition-[background-color,translate] duration-160 ease-out hover:translate-y-1"
             }
         >
             <a href={ytURL} target="_blank" rel="noopener noreferrer" className="h-full w-full">
                 <div
-                    style={{
-                        backgroundImage: `url(${artist.artist_profile_picture_url})`,
-                    }}
-                    className={
-                        "absolute left-0 top-0 -z-10 size-full overflow-hidden bg-cover bg-center blur-sm brightness-50 filter transition-all group-hover:blur"
-                    }
-                />
-                <div
-                    className={
-                        "grid grid-cols-[1fr_3fr] content-center overflow-hidden p-2"
-                    }
+                    className={"overflow-hidden grid grid-cols-[1fr_3fr_1fr] content-center gap-2"}
                 >
-                    <Image
-                        alt={"thumbnail"}
-                        src={artist.artist_profile_picture_url}
-                        className={"rounded-full"}
-                        width={88}
-                        height={88}
-                        sizes={
-                            "(min-width: 980px) 67px, (min-width: 780px) calc(6.67vw + 3px), (min-width: 440px) 88px, 20.83vw"
-                        }
-                    />
-                    <div className={"my-auto sm:px-6"}>
+                    <div
+                        className={"relative aspect-square w-16 m-auto overflow-hidden rounded-full shadow-2xl"}
+                    >
+                        <Image
+                            alt={"thumbnail"}
+                            src={artist.artist_profile_picture_url}
+                            fill
+                            className={"object-cover"}
+                            sizes="64px"
+                        />
+                    </div>
+                    <div className={"flex flex-col justify-center break-all"}>
                         <h3
-                            className={
-                                "line-clamp-1 text-lg font-medium leading-6 text-white"
-                            }
+                            className={"line-clamp-1 font-medium"}
                         >
                             {artist.artist_name.replace(" - Topic", "")}
                         </h3>
                     </div>
+                    <div className={"text-text-secondary line-clamp-1 content-center"}>{artist.listen_count} scrobbles</div>
                 </div>
             </a>
         </div>

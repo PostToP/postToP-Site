@@ -1,6 +1,7 @@
 import UserBackend from "@/utils/Backend/UserBackend";
 import { useEffect, useState } from "react";
 import ArtistCard from "../Card/ArtistCard";
+import Card from "../Card/Card";
 import { DateRange } from "../Misc/DateSelector";
 
 export default function TopArtistShowcase({
@@ -35,10 +36,14 @@ export default function TopArtistShowcase({
 
 
     return (
-        <div className={"grid gap-5 md:grid-cols-3"}>
-            {topArtists.slice(0, 3).map((artist, i) => (
-                <ArtistCard key={`top-artist-${i}`} artist={artist} />
-            ))}
-        </div>
+        <Card>
+            <h2 className="text-xl font-medium">Top Artists</h2>
+            <ul className="flex flex-col gap-2 mt-4 mb-4 divide-y">
+                {topArtists.slice(0, 5).map((artist, i) => (
+                    <ArtistCard key={`top-artist-${i}`} artist={artist} />
+                ))}
+            </ul>
+            <span className="text-text-secondary hover:underline">View more ➤</span>
+        </Card>
     );
 }

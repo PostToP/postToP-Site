@@ -1,5 +1,7 @@
 import usePostTopLiveSocket from "@/utils/Backend/PosttopLiveSocket";
 import { useEffect, useState } from "react";
+import YoutubeThumbnail, { ThumbnailQuality } from "../Misc/YoutubeThumbnail";
+import Card from "./Card";
 
 const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -90,61 +92,51 @@ export default function CurrentlyListeningCard({
     const ytUrl = CurrentlyListeningData?.video ? `https://www.youtube.com/watch?v=${CurrentlyListeningData.video.watchID}` : '#';
 
     return (
-        <div className="group relative max-w-md mx-auto h-full w-full content-center overflow-hidden rounded-lg border border-gray-800 transition-transform hover:scale-105">
+        <Card>
             {CurrentlyListeningData?.video && CurrentlyListeningData?.listeningData ? (
-                <a href={ytUrl} target="_blank" rel="noopener noreferrer" className="h-full w-full">
-                    {CurrentlyListeningData.video.coverImage && (
-                        <img
-                            src={CurrentlyListeningData.video.coverImage}
-                            alt="Cover"
-                            className="-z-10 absolute inset-0 w-full h-full object-cover blur-sm brightness-50 filter transition-all group-hover:blur"
-                        />
-                    )}
-                    <div className="overflow-hidden content-center p-4">
-                        <div className="flex items-center space-x-2 mb-4">
-                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                            <h2 className="text-lg font-semibold text-white">Currently Listening</h2>
-                        </div>
-
-                        <div className="relative aspect-square w-1/2 m-auto overflow-hidden rounded-lg mb-6">
+                <div className="grid grid-cols-[1fr_5fr] gap-4 size-full">
+                    <div>
+                        <div className="aspect-square w-64 overflow-hidden rounded-lg">
                             {CurrentlyListeningData.video.coverImage && (
-                                <img
-                                    src={CurrentlyListeningData.video.coverImage}
-                                    alt="Cover"
-                                    className="w-full h-full object-cover"
-                                />
-                            )}
-                            <div className="absolute flex h-full w-full items-center justify-center text-6xl text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 inset-0">
-                                ▶
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col justify-center break-all space-y-1">
-                            <h3 className="line-clamp-2 font-medium text-white text-lg">{CurrentlyListeningData.video.title}</h3>
-                            <p className="mt-1 line-clamp-1 text-sm text-gray-400">by {CurrentlyListeningData.video.artist.name}</p>
-                        </div>
-
-                        <div className="space-y-1 mt-4">
-                            <div className="flex justify-between text-xs text-gray-400">
-                                <span>{formatTime(CurrentlyListeningData.listeningData.currentTime + elapsedTime)}</span>
-                                <span>{formatTime(CurrentlyListeningData.video.duration)}</span>
-                            </div>
-                            <div className="w-full bg-gray-700 rounded-full h-1">
                                 <div
-                                    className="bg-green-500 h-1 rounded-full transition-all"
+                                    className={"relative aspect-square w-full m-auto overflow-hidden rounded-lg shadow-2xl"}
+                                >
+                                    <YoutubeThumbnail yt_id={CurrentlyListeningData.video.watchID} quality={ThumbnailQuality.STANDARD} />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col space-y-1 h-full justify-between">
+                        <h3 className="text-text-secondary">Currently Playing</h3>
+                        <div>
+                            <h3 className="line-clamp-1 font-medium text-lg">{CurrentlyListeningData.video.title}</h3>
+                            <p className="line-clamp-1 text-text-secondary">{CurrentlyListeningData.video.artist.name}</p>
+                        </div>
+                        <div className="space-y-1 mt-4">
+                            <div className="w-full bg-disabled rounded-full h-1">
+                                <div
+                                    className="bg-accent-primary h-1 rounded-full transition-all duration-1000 ease-linear relative"
                                     style={{
                                         width: `${Math.min(100, ((CurrentlyListeningData.listeningData.currentTime + elapsedTime) / CurrentlyListeningData.video.duration) * 100)}%`
                                     }}
-                                />
+                                >
+                                    <div className="size-4 absolute -right-2 bg-accent-primary rounded-full -translate-1/2 top-1/2" />
+                                </div>
+                            </div>
+                            <div className="flex justify-between text-xs text-text-secondary">
+                                <span>{formatTime(CurrentlyListeningData.listeningData.currentTime + elapsedTime)}</span>
+                                <span>{formatTime(CurrentlyListeningData.video.duration)}</span>
                             </div>
                         </div>
                     </div>
-                </a>
+                </div>
             ) : (
-                <div className="flex items-center justify-center py-12 text-gray-400">
+                <div className="flex items-center justify-center py-12 text-text-secondary">
                     Currently not listening to anything.
                 </div>
-            )}
-        </div>
+            )
+            }
+        </Card >
     );
 }

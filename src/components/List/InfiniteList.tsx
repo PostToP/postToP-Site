@@ -16,7 +16,6 @@ export default function InfiniteList({
         setLoading(true);
         const newItems = await generator(items.length);
         setItems((prevItems) => [...prevItems, ...newItems]);
-        setLoading(false);
     }
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -39,7 +38,7 @@ export default function InfiniteList({
 
     return (
         <pre>
-            <ul>
+            <ul className="divide-y">
                 {items.map((item, index) => (
                     <ElementContainer key={`item-${index}`} item={item} />
                 ))}

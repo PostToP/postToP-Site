@@ -10,6 +10,7 @@
     "format": "biome format --write"
   },
   "dependencies": {
+    "clsx-for-tailwind": "^1.0.0",
     "date": "^2.0.6",
     "next": "15.4.6",
     "react": "19.1.0",

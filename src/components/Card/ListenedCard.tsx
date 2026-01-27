@@ -1,3 +1,6 @@
+import { formatTimeAgo } from "@/utils/Date"
+import YoutubeThumbnail, { ThumbnailQuality } from "../Misc/YoutubeThumbnail"
+
 export interface ListenedMusic {
     video_id: string
     user_id: number
@@ -22,21 +25,33 @@ export default function ListenedCard({
 }) {
     const ytUrl = `https://www.youtube.com/watch?v=${music.yt_id}`;
     return (
-        <a
-            href={ytUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`flex items-center gap-4 p-4 rounded-lg border border-gray-800 transition-colors hover:bg-gray-800/50 ${className}`}
+        <div
+            className={`${className} w-full content-center overflow-hidden hover:bg-surface-secondary transition-[background-color,translate] duration-160 ease-out hover:translate-y-1 p-2`}
         >
-            <img
-                src={`https://img.youtube.com/vi/${music.yt_id}/hqdefault.jpg`}
-                alt={music.title}
-                className="h-20 w-36 object-cover rounded"
-            />
-            <h3 className="font-medium text-white line-clamp-2 flex-1">
-                {music.title}
-            </h3>
-            At: {new Date(music.listened_at).toLocaleString()}
-        </a>
+            <a href={ytUrl} target="_blank" rel="noopener noreferrer" className="h-full w-full">
+                <div
+                    className={"overflow-hidden grid grid-cols-[1fr_3fr_1fr] content-center gap-2"}
+                >
+                    <div
+                        className={"relative aspect-square w-18 m-auto overflow-hidden rounded-lg shadow-2xl"}
+                    >
+                        <YoutubeThumbnail yt_id={music.yt_id} quality={ThumbnailQuality.LOW} />
+                    </div>
+                    <div className={"flex flex-col justify-center break-all"}>
+                        <h3
+                            className={"line-clamp-1 font-medium"}
+                        >
+                            {music.title}
+                        </h3>
+                        <p className={"line-clamp-1 text-sm text-text-secondary"}>
+                            TEMP
+                        </p>
+                    </div>
+                    <div className={"text-text-secondary line-clamp-1 text-sm content-center"}>
+                        {formatTimeAgo(new Date(music.listened_at))}
+                    </div>
+                </div>
+            </a>
+        </div>
     );
 }

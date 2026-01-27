@@ -7,8 +7,20 @@ const Data = [
     },
     {
         name: "Last Week",
-        startDate: new Date(new Date().setDate(new Date().getDate() - new Date().getDay() - 7)),
-        endDate: new Date(new Date().setDate(new Date().getDate() - new Date().getDay() - 1)),
+        startDate: (() => {
+            const date = new Date();
+            const daysSinceMonday = (date.getDay() + 6) % 7;
+            date.setDate(date.getDate() - daysSinceMonday - 7);
+            date.setHours(0, 0, 0, 0);
+            return date;
+        })(),
+        endDate: (() => {
+            const date = new Date();
+            const daysSinceMonday = (date.getDay() + 6) % 7;
+            date.setDate(date.getDate() - daysSinceMonday - 1);
+            date.setHours(23, 59, 59, 999);
+            return date;
+        })(),
     },
     {
         name: "Last 30 Days",

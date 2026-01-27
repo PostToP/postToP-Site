@@ -1,5 +1,6 @@
 import UserBackend from "@/utils/Backend/UserBackend";
 import { useEffect, useState } from "react";
+import Card from "../Card/Card";
 import MusicCard from "../Card/MusicCard";
 import { DateRange } from "../Misc/DateSelector";
 
@@ -32,28 +33,20 @@ export default function TopMusicShowcase({
     }
 
     return (
-        <div
-            className={"grid grid-cols-1 gap-5 md:grid-cols-[5fr_4fr] md:grid-rows-3"}
-        >
-            <MusicCard
-                music={topMusic[0]}
-                className={"md:row-start-1 md:row-end-4"}
-            />
-            <MusicCard
-                music={topMusic[1]}
-                className={"md:row-start-1 md:row-end-2"}
-                small={true}
-            />
-            <MusicCard
-                music={topMusic[2]}
-                className={"md:row-start-2 md:row-end-3"}
-                small={true}
-            />
-            <MusicCard
-                music={topMusic[3]}
-                className={"md:row-start-3 md:row-end-4"}
-                small={true}
-            />
-        </div>
+        <Card>
+            <h2 className="text-xl font-medium">Top Tracks</h2>
+            <ul className="flex flex-col gap-2 mt-4 mb-4  divide-y">
+                {
+                    topMusic.slice(0, 6).map((music, index) => (
+                        <MusicCard
+                            key={`top-music-${index}`}
+                            music={music}
+                        />
+                    ))
+                }
+            </ul>
+            <span className="text-text-secondary hover:underline">View more ➤</span>
+
+        </Card>
     );
 }

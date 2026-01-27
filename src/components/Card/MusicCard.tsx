@@ -1,4 +1,3 @@
-import Link from "next/dist/client/link"
 import YoutubeThumbnail, { ThumbnailQuality } from "../Misc/YoutubeThumbnail"
 
 export interface ListenedMusic {
@@ -18,54 +17,35 @@ export interface Channel {
 export default function MusicCard({
     music,
     className,
-    small = false,
 }: {
     music: ListenedMusic;
     className?: string;
-    small?: boolean;
 }) {
     const ytUrl = `https://www.youtube.com/watch?v=${music.yt_id}`;
     return (
         <div
-            className={`group relative ${className} h-full w-full content-center overflow-hidden rounded-lg border border-gray-800 transition-transform hover:scale-105`}
+            className={`${className} w-full content-center overflow-hidden hover:bg-surface-secondary transition-[background-color,translate] duration-160 ease-out hover:translate-y-1 p-2`}
         >
             <a href={ytUrl} target="_blank" rel="noopener noreferrer" className="h-full w-full">
-                <YoutubeThumbnail
-                    yt_id={music.yt_id}
-                    className={
-                        "-z-10 blur-sm brightness-50 filter transition-all group-hover:blur"
-                    }
-                    quality={ThumbnailQuality.LOW}
-                />
                 <div
-                    className={`overflow-hidden ${small && "grid grid-cols-[1fr_3fr] gap-3"
-                        } content-center p-4`}
+                    className={"overflow-hidden grid grid-cols-[1fr_3fr_1fr] content-center gap-2"}
                 >
                     <div
-                        className={`relative aspect-square ${small ? "w-full" : "mb-6 w-1/2"
-                            } m-auto overflow-hidden rounded-lg`}
+                        className={"relative aspect-square w-16 m-auto overflow-hidden rounded-lg shadow-2xl"}
                     >
-                        <YoutubeThumbnail yt_id={music.yt_id} quality={small ? ThumbnailQuality.STANDARD : ThumbnailQuality.HIGH} />
-                        <div
-                            className={
-                                "absolute flex h-full w-full items-center justify-center text-6xl text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                            }
-                        >
-                            ▶
-                        </div>
+                        <YoutubeThumbnail yt_id={music.yt_id} quality={ThumbnailQuality.STANDARD} />
                     </div>
                     <div className={"flex flex-col justify-center break-all"}>
                         <h3
-                            className={`line-clamp-2 font-medium text-white ${small ? "text-base" : "text-lg"
-                                }`}
+                            className={"line-clamp-1 font-medium"}
                         >
                             {music.video_title}
                         </h3>
-                        <p className={"mt-1 line-clamp-1 text-sm text-gray-400"}>
-                            by {music.channel.name.replace(" - Topic", "")}
+                        <p className={"line-clamp-1 text-sm text-text-secondary"}>
+                            {music.channel.name.replace(" - Topic", "")}
                         </p>
                     </div>
-                    <div className={"absolute bottom-1 right-1 text-white"}>x{music.listen_count}</div>
+                    <div className={"text-text-secondary line-clamp-1 content-center"}>{music.listen_count} scrobbles</div>
                 </div>
             </a>
         </div>

@@ -20,7 +20,11 @@ export class Backend {
         queryParamsOrBody?: Record<string, any> | any,
         path?: string,
     ): Promise<BackendResponse<T>> {
-        const token = localStorage.getItem("authToken") || "";
+        let token = ""
+        if (typeof localStorage !== "undefined") // Next.Js server-side functions
+            token = localStorage.getItem("authToken") || "";
+
+
         let url = `${Backend._server}${path}`;
         const options: RequestInit = {
             method,

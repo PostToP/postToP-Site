@@ -63,7 +63,12 @@ export default function CurrentlyListeningCard({
         dara.connect();
         dara.onVideoUpdate((data: Root) => {
             setCurrentlyListeningData(data);
-            setElapsedTime(new Date().getTime() - new Date(data.listeningData!.updatedAt).getTime() > 0 ? Math.floor((new Date().getTime() - new Date(data.listeningData!.updatedAt).getTime()) / 1000) : 0);
+            if (data.listeningData === null) {
+                setElapsedTime(0);
+                return;
+            }
+            else
+                setElapsedTime(new Date().getTime() - new Date(data.listeningData!.updatedAt).getTime() > 0 ? Math.floor((new Date().getTime() - new Date(data.listeningData!.updatedAt).getTime()) / 1000) : 0);
         });
         return () => {
             dara.disconnect();

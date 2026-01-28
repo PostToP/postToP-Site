@@ -14,8 +14,8 @@ export default function ListenedGraph({
     useEffect(() => {
         async function fetchTopMusic() {
             const response = await UserBackend.getUserStats(user_handle, {
-                startDate: dateRange?.startDate.toISOString() ?? undefined,
-                endDate: dateRange?.endDate.toISOString() ?? undefined,
+                startDate: dateRange?.startDate.toISOString() ?? new Date(new Date().setDate(new Date().getDate() - 7)).toISOString(),
+                endDate: dateRange?.endDate.toISOString() ?? new Date().toISOString(),
             });
             if (response.ok) {
                 const start = dateRange?.startDate || new Date();

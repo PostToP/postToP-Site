@@ -12,8 +12,7 @@ export default async function Home() {
 
 
   return (
-    <main className="p-4 space-y-4 min-h-screen max-w-[1500px] mx-auto pb-8">
-
+    <main className="space-y-4">
       <Card>
         <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-6 md:space-y-0 py-8">
           <div className="space-y-2">

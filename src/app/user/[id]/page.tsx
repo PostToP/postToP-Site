@@ -17,7 +17,7 @@ export default function UserPage(
     const [dateRange, setDateRange] = useState<DateRange | null>(null);
 
     return (
-        <main className="p-4 space-y-4 h-screen max-w-[1500px] mx-auto grid-rows-[auto_1fr]">
+        <main className="grid-rows-[auto_1fr]">
             <DateSelector onDateChange={(dateRange) => {
                 setDateRange(dateRange);
             }} />

@@ -39,4 +39,10 @@ export default class UserBackend extends Backend {
             , filters
         );
     }
+
+    static async getUserInfo(user_handle: string): Promise<BackendResponse<User>> {
+        return UserBackend.GET(
+            `/user/${user_handle}`
+        );
+    }
 }

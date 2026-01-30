@@ -23,17 +23,4 @@ export default class AuthBackend extends Backend {
             "/register",
         );
     }
-
-    static async getCurrentUser(): Promise<BackendResponse<{ user: User }>> {
-        return {
-            ok: true,
-            data: {
-                user: {
-                    id: "1",
-                    username: "demo_user",
-                    handle: "demo_handle",
-                }
-            },
-        }
-    }
 }

@@ -38,25 +38,34 @@ export default function AuthProvider({
     };
 
     useEffect(() => {
-        const token = localStorage.getItem("authToken");
-        if (token) {
-            AuthBackend.getCurrentUser()
-                .then((res) => {
-                    if (res.ok) {
-                        setUser(res.data.user);
-                        setLoading(false);
-                    } else {
-                        localStorage.removeItem("authToken");
-                        setLoading(false);
-                    }
-                })
-                .catch(() => {
-                    localStorage.removeItem("authToken");
-                });
-        } else {
+        const fetchCurrentUser = async () => {
+            const token = localStorage.getItem("authToken");
+            if (!token) {
+                setLoading(false);
+                return;
+            }
+
+            if (localStorage.getItem("user")) {
+                // biome-ignore lint/style/noNonNullAssertion: <explanation>
+                setUser(JSON.parse(localStorage.getItem("user")!));
+                setLoading(false);
+                return;
+            }
+
             setLoading(false);
-        }
+        };
+
+        fetchCurrentUser();
     }, []);
+
+
+    useEffect(() => {
+        if (user) {
+            localStorage.setItem("user", JSON.stringify(user));
+        } else {
+            localStorage.removeItem("user");
+        }
+    }, [user]);
 
     return <AuthContext.Provider value={{ user, login, logout, register, loading }}>
         {children}

@@ -1,3 +1,4 @@
+import formatNER, { NERResult } from "@/utils/NER"
 import YoutubeThumbnail, { ThumbnailQuality } from "../Misc/YoutubeThumbnail"
 
 export interface ListenedMusic {
@@ -5,6 +6,7 @@ export interface ListenedMusic {
     video_title: string
     listen_count: string
     channel: Channel
+    NER: NERResult | null
 }
 
 export interface Channel {
@@ -21,6 +23,9 @@ export default function MusicCard({
     music: ListenedMusic;
     className?: string;
 }) {
+    const { title, subtitle } = formatNER(music.NER, music.video_title, music.channel.name);
+
+
     const ytUrl = `https://www.youtube.com/watch?v=${music.yt_id}`;
     return (
         <div
@@ -39,10 +44,10 @@ export default function MusicCard({
                         <h3
                             className={"line-clamp-1 font-medium"}
                         >
-                            {music.video_title}
+                            {title}
                         </h3>
                         <p className={"line-clamp-1 text-sm text-text-secondary"}>
-                            {music.channel.name.replace(" - Topic", "")}
+                            {subtitle}
                         </p>
                     </div>
                     <div className={"text-text-secondary line-clamp-1 content-center"}>{music.listen_count} scrobbles</div>

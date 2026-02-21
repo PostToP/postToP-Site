@@ -1,11 +1,13 @@
 import { formatTimeAgo } from "@/utils/Date"
 import YoutubeThumbnail, { ThumbnailQuality } from "../Misc/YoutubeThumbnail"
+import formatNER, { NERResult } from "@/utils/NER"
 
 export interface ListenedMusic {
     yt_id: string
     listened_at: string
     video_title: string
     artist_name: string
+    NER: NERResult | null
 }
 
 export default function ListenedCard({
@@ -15,6 +17,8 @@ export default function ListenedCard({
     item: ListenedMusic;
     className?: string;
 }) {
+    const { title, subtitle } = formatNER(music.NER, music.video_title, music.artist_name);
+
     const ytUrl = `https://www.youtube.com/watch?v=${music.yt_id}`;
     return (
         <div
@@ -33,10 +37,10 @@ export default function ListenedCard({
                         <h3
                             className={"line-clamp-1 font-medium"}
                         >
-                            {music.video_title}
+                            {title}
                         </h3>
                         <p className={"line-clamp-1 text-sm text-text-secondary"}>
-                            {music.artist_name.replace(" - Topic", "")}
+                            {subtitle}
                         </p>
                     </div>
                     <div className={"text-text-secondary line-clamp-1 text-sm content-center"}>

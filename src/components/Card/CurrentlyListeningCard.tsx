@@ -2,6 +2,7 @@ import usePostTopLiveSocket from "@/utils/Backend/PosttopLiveSocket";
 import { useEffect, useState } from "react";
 import YoutubeThumbnail, { ThumbnailQuality } from "../Misc/YoutubeThumbnail";
 import Card from "./Card";
+import formatNER, { NERResult } from "@/utils/NER";
 
 const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -22,6 +23,7 @@ export interface Video {
     duration: number
     coverImage: string
     isMusic: IsMusic
+    NER: NERResult | null
 }
 
 export interface Artist {
@@ -96,6 +98,8 @@ export default function CurrentlyListeningCard({
     }, [CurrentlyListeningData]);
     const ytUrl = CurrentlyListeningData?.video ? `https://www.youtube.com/watch?v=${CurrentlyListeningData.video.watchID}` : '#';
 
+    let { title, subtitle } = formatNER(CurrentlyListeningData?.video?.NER || null, CurrentlyListeningData?.video?.title || "Unknown Title", CurrentlyListeningData?.video?.artist.name || "Unknown Artist");
+
     return (
         <Card>
             {CurrentlyListeningData?.video && CurrentlyListeningData?.listeningData ? (
@@ -115,8 +119,8 @@ export default function CurrentlyListeningCard({
                     <div className="flex flex-col space-y-1 h-full justify-between">
                         <h3 className="text-text-secondary">Currently Playing</h3>
                         <div>
-                            <h3 className="line-clamp-1 font-medium text-lg">{CurrentlyListeningData.video.title}</h3>
-                            <p className="line-clamp-1 text-text-secondary">{CurrentlyListeningData.video.artist.name}</p>
+                            <h3 className="line-clamp-1 font-medium text-lg">{title}</h3>
+                            <p className="line-clamp-1 text-text-secondary">{subtitle}</p>
                         </div>
                         <div className="space-y-1 mt-4">
                             <div className="w-full bg-disabled rounded-full h-1">

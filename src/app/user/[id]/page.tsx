@@ -5,6 +5,7 @@ import ListenedGraph from "@/components/Graph/ListenedGraph";
 import TopGenreRadarChart from "@/components/Graph/TopGenreRadarChart";
 import ListenHistory from "@/components/List/ListenHistory";
 import DateSelector, { DateRange } from "@/components/Misc/DateSelector";
+import ProfileUser from "@/components/Misc/ProfileUser";
 import TopArtistShowcase from "@/components/Showcase/TopArtistShowcase";
 import TopMusicShowcase from "@/components/Showcase/TopMusicShowcase";
 import UserBackend from "@/utils/Backend/UserBackend";
@@ -41,8 +42,10 @@ export default function UserPage() {
                 <DateSelector onDateChange={(dateRange) => {
                     setDateRange(dateRange);
                 }} />
-                <div>User Page for ID: {id}</div>
                 <main className="grid grid-cols-12 gap-6">
+                    <div className="col-span-12">
+                        <ProfileUser user_handle={id} />
+                    </div>
                     <div className="col-span-8 max-h-72">
                         <CurrentlyListeningCard user_handle={id} />
                     </div>

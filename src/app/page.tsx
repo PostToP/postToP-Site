@@ -2,6 +2,8 @@ import Link from "next/link";
 import Card from "@/components/Card/Card";
 import ServerBackend from "@/utils/Backend/ServerBackend";
 
+export let revalidate = 60 * 60 * 1;
+
 export default async function Home() {
     const serverStats = await ServerBackend.getStats();
     if (!serverStats.ok) {

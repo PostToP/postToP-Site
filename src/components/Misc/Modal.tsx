@@ -1,4 +1,4 @@
-import {forwardRef, useImperativeHandle, useState} from "react";
+import {forwardRef, useEffect, useImperativeHandle, useState} from "react";
 
 const Modal = forwardRef(
     (
@@ -16,8 +16,19 @@ const Modal = forwardRef(
             close: () => setIsOpen(false),
         }));
 
-        if (!isOpen) return null;
+        useEffect(() => {
+            const handleKeyDown = (e: KeyboardEvent) => {
+                if (e.key === "Escape") {
+                    setIsOpen(false);
+                }
+            };
+            window.addEventListener("keydown", handleKeyDown);
+            return () => {
+                window.removeEventListener("keydown", handleKeyDown);
+            };
+        }, []);
 
+        if (!isOpen) return null;
         return (
             <button
                 type="button"

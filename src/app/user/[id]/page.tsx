@@ -45,17 +45,17 @@ export default function UserPage() {
                     setDateRange(dateRange);
                 }}
             />
-            <main className="grid grid-cols-12 gap-6">
+            <main className="grid grid-cols-12 gap-4 md:gap-6 px-4 md:px-0">
                 <div className="col-span-12">
                     <ProfileUser user_handle={id} />
                 </div>
-                <div className="col-span-8 max-h-72">
+                <div className="col-span-12 md:col-span-8 max-h-72">
                     <CurrentlyListeningCard user_handle={id} />
                 </div>
-                <div className="col-span-4 row-span-2">
+                <div className="col-span-12 md:col-span-4 md:row-span-2">
                     <TopMusicShowcase user_handle={id} dateRange={dateRange} />
                 </div>
-                <div className="col-span-4 row-span-3 gap-6 flex flex-col">
+                <div className="col-span-12 md:col-span-4 md:row-span-3 gap-6 flex flex-col">
                     <TopArtistShowcase user_handle={id} dateRange={dateRange} />
                     <Card>
                         <h2 className="text-xl font-medium">Top Genres</h2>
@@ -64,7 +64,7 @@ export default function UserPage() {
                         </div>
                     </Card>
                 </div>
-                <div className="col-span-4">
+                <div className="col-span-12 md:col-span-4">
                     <Card>
                         <h2 className="text-xl font-medium">Listening Activity</h2>
                         <div>
@@ -73,10 +73,10 @@ export default function UserPage() {
                         <span className="text-text-secondary hover:underline">View more ➤</span>
                     </Card>
                 </div>
-                <div className="col-span-8">
+                <div className="col-span-12 md:col-span-8">
                     <ListenHistory userId={id} />
                 </div>
-                <div className="col-span-4"></div>
+                <div className="col-span-12 md:col-span-4"></div>
             </main>
         </main>
     );

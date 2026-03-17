@@ -10,8 +10,6 @@ interface ListenHistoryModalProps {
 }
 
 const ListenHistoryModal = forwardRef<any, ListenHistoryModalProps>(({userId}, ref) => {
-    const [dateRange, setDateRange] = useState<DateRange | null>(null);
-
     return (
         <Modal ref={ref}>
             <div className="p-6 border-b border-gray-200">
@@ -19,22 +17,12 @@ const ListenHistoryModal = forwardRef<any, ListenHistoryModalProps>(({userId}, r
                 <p className="text-sm text-gray-500 mt-1">Browse your complete listening history</p>
             </div>
 
-            <div className="p-6 border-b border-gray-200 bg-gray-50">
-                <DateSelector onDateChange={setDateRange} />
-            </div>
-
             <div className="flex-1 overflow-y-auto p-6">
                 <InfiniteList
-                    key={dateRange ? `${dateRange.startDate.getTime()}-${dateRange.endDate.getTime()}` : "no-date"}
+                    key={"no-date"}
                     generator={async offset => {
                         const response = await UserBackend.getListenHistory(userId, 50, offset);
                         if (response.ok) {
-                            if (dateRange) {
-                                return response.data.filter((item: any) => {
-                                    const itemDate = new Date(item.created_at);
-                                    return itemDate >= dateRange.startDate && itemDate <= dateRange.endDate;
-                                });
-                            }
                             return response.data;
                         } else {
                             console.error("Failed to fetch listen history:", response.error);

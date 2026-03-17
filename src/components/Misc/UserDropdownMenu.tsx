@@ -60,7 +60,7 @@ export default function UserDropdownMenu() {
                                 aria-expanded={isOpen}
                                 aria-haspopup="true"
                                 onClick={() => setIsOpen(!isOpen)}>
-                                <img src="https://placehold.co/36" alt="" className="rounded-full" />
+                                <p>{authContext.user.username}</p>
                                 <svg
                                     className="-mr-1 ml-2 h-5 w-5"
                                     xmlns="http://www.w3.org/2000/svg"

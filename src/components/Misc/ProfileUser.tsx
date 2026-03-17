@@ -1,12 +1,8 @@
+import {useEffect, useState} from "react";
 import UserBackend from "@/utils/Backend/UserBackend";
-import { useEffect, useState } from "react";
 import Card from "../Card/Card";
 
-export default function ProfileUser({
-    user_handle,
-}: {
-    user_handle?: string;
-}) {
+export default function ProfileUser({user_handle}: {user_handle?: string}) {
     const [user, setUser] = useState<any>(null);
 
     useEffect(() => {

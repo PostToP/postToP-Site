@@ -1,45 +1,45 @@
+import {useEffect, useState} from "react";
 import usePostTopLiveSocket from "@/utils/Backend/PosttopLiveSocket";
-import { useEffect, useState } from "react";
-import YoutubeThumbnail, { ThumbnailQuality } from "../Misc/YoutubeThumbnail";
+import formatNER, {NERResult} from "@/utils/NER";
+import YoutubeThumbnail, {ThumbnailQuality} from "../Misc/YoutubeThumbnail";
 import Card from "./Card";
-import formatNER, { NERResult } from "@/utils/NER";
 
 const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
 };
 
 export interface Root {
-    userId: number
-    video: Video | null
-    listeningData: ListeningData | null
+    userId: number;
+    video: Video | null;
+    listeningData: ListeningData | null;
 }
 
 export interface Video {
-    watchID: string
-    title: string
-    artist: Artist
-    duration: number
-    coverImage: string
-    isMusic: IsMusic
-    NER: NERResult | null
+    watchID: string;
+    title: string;
+    artist: Artist;
+    duration: number;
+    coverImage: string;
+    isMusic: IsMusic;
+    NER: NERResult | null;
 }
 
 export interface Artist {
-    name: string
-    handle: string
+    name: string;
+    handle: string;
 }
 
 export interface IsMusic {
-    is_music: boolean
-    reviewed: boolean
+    is_music: boolean;
+    reviewed: boolean;
 }
 
 export interface ListeningData {
-    currentTime: number
-    status: VideoStatus
-    updatedAt: string
+    currentTime: number;
+    status: VideoStatus;
+    updatedAt: string;
 }
 
 export enum VideoStatus {
@@ -49,14 +49,7 @@ export enum VideoStatus {
     ENDED = 3,
 }
 
-
-
-
-export default function CurrentlyListeningCard({
-    user_handle,
-}: {
-    user_handle: string
-}) {
+export default function CurrentlyListeningCard({user_handle}: {user_handle: string}) {
     const [CurrentlyListeningData, setCurrentlyListeningData] = useState<Root | null>(null);
     const [elapsedTime, setElapsedTime] = useState(0);
     const dara = usePostTopLiveSocket(user_handle);
@@ -68,9 +61,12 @@ export default function CurrentlyListeningCard({
             if (data.listeningData === null) {
                 setElapsedTime(0);
                 return;
-            }
-            else
-                setElapsedTime(new Date().getTime() - new Date(data.listeningData!.updatedAt).getTime() > 0 ? Math.floor((new Date().getTime() - new Date(data.listeningData!.updatedAt).getTime()) / 1000) : 0);
+            } else
+                setElapsedTime(
+                    new Date().getTime() - new Date(data.listeningData!.updatedAt).getTime() > 0
+                        ? Math.floor((new Date().getTime() - new Date(data.listeningData!.updatedAt).getTime()) / 1000)
+                        : 0,
+                );
         });
         return () => {
             dara.disconnect();
@@ -86,7 +82,11 @@ export default function CurrentlyListeningCard({
             return;
         }
 
-        if (!CurrentlyListeningData || (CurrentlyListeningData.listeningData.status !== VideoStatus.PLAYING && CurrentlyListeningData.listeningData.status !== VideoStatus.STARTED)) {
+        if (
+            !CurrentlyListeningData ||
+            (CurrentlyListeningData.listeningData.status !== VideoStatus.PLAYING &&
+                CurrentlyListeningData.listeningData.status !== VideoStatus.STARTED)
+        ) {
             return;
         }
 
@@ -96,9 +96,15 @@ export default function CurrentlyListeningCard({
 
         return () => clearInterval(interval);
     }, [CurrentlyListeningData]);
-    const ytUrl = CurrentlyListeningData?.video ? `https://www.youtube.com/watch?v=${CurrentlyListeningData.video.watchID}` : '#';
+    const ytUrl = CurrentlyListeningData?.video
+        ? `https://www.youtube.com/watch?v=${CurrentlyListeningData.video.watchID}`
+        : "#";
 
-    let { title, subtitle } = formatNER(CurrentlyListeningData?.video?.NER || null, CurrentlyListeningData?.video?.title || "Unknown Title", CurrentlyListeningData?.video?.artist.name || "Unknown Artist");
+    let {title, subtitle} = formatNER(
+        CurrentlyListeningData?.video?.NER || null,
+        CurrentlyListeningData?.video?.title || "Unknown Title",
+        CurrentlyListeningData?.video?.artist.name || "Unknown Artist",
+    );
 
     return (
         <Card>
@@ -108,9 +114,13 @@ export default function CurrentlyListeningCard({
                         <div className="aspect-square w-64 overflow-hidden rounded-lg">
                             {CurrentlyListeningData.video.coverImage && (
                                 <div
-                                    className={"relative aspect-square w-full m-auto overflow-hidden rounded-lg shadow-2xl"}
-                                >
-                                    <YoutubeThumbnail yt_id={CurrentlyListeningData.video.watchID} quality={ThumbnailQuality.STANDARD} />
+                                    className={
+                                        "relative aspect-square w-full m-auto overflow-hidden rounded-lg shadow-2xl"
+                                    }>
+                                    <YoutubeThumbnail
+                                        yt_id={CurrentlyListeningData.video.watchID}
+                                        quality={ThumbnailQuality.STANDARD}
+                                    />
                                 </div>
                             )}
                         </div>
@@ -127,14 +137,15 @@ export default function CurrentlyListeningCard({
                                 <div
                                     className="bg-accent-primary h-1 rounded-full transition-all duration-1000 ease-linear relative"
                                     style={{
-                                        width: `${Math.min(100, ((CurrentlyListeningData.listeningData.currentTime + elapsedTime) / CurrentlyListeningData.video.duration) * 100)}%`
-                                    }}
-                                >
+                                        width: `${Math.min(100, ((CurrentlyListeningData.listeningData.currentTime + elapsedTime) / CurrentlyListeningData.video.duration) * 100)}%`,
+                                    }}>
                                     <div className="size-4 absolute -right-2 bg-accent-primary rounded-full -translate-1/2 top-1/2" />
                                 </div>
                             </div>
                             <div className="flex justify-between text-xs text-text-secondary">
-                                <span>{formatTime(CurrentlyListeningData.listeningData.currentTime + elapsedTime)}</span>
+                                <span>
+                                    {formatTime(CurrentlyListeningData.listeningData.currentTime + elapsedTime)}
+                                </span>
                                 <span>{formatTime(CurrentlyListeningData.video.duration)}</span>
                             </div>
                         </div>
@@ -144,8 +155,7 @@ export default function CurrentlyListeningCard({
                 <div className="flex items-center justify-center py-12 text-text-secondary">
                     Currently not listening to anything.
                 </div>
-            )
-            }
-        </Card >
+            )}
+        </Card>
     );
 }

@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import {createContext} from "react";
 
 export interface User {
     id: string;
@@ -11,10 +11,7 @@ export const AuthContext = createContext<{
     loading: boolean;
     login: (username: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
-    register: (
-        username: string,
-        password: string,
-    ) => Promise<void>;
+    register: (username: string, password: string) => Promise<void>;
 }>({
     user: null,
     loading: true,

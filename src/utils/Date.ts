@@ -1,6 +1,7 @@
-export function formatTimeAgo(updatedDate: Date) {
+export function formatTimeAgo(updatedDate: Date | string) {
     const currentDate = new Date();
-    const diffInMilliseconds = currentDate.getTime() - updatedDate.getTime();
+    const date = typeof updatedDate === "string" ? new Date(updatedDate) : updatedDate;
+    const diffInMilliseconds = currentDate.getTime() - date.getTime();
     const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
     const diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60));
     const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
@@ -22,9 +23,10 @@ export function formatTimeAgo(updatedDate: Date) {
     }
 }
 
-export function formatDate(date: Date) {
-    return date.toLocaleDateString(undefined, {
-        month: 'short',
-        day: 'numeric',
+export function formatDate(date: Date | string) {
+    const dateObj = typeof date === "string" ? new Date(date) : date;
+    return dateObj.toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
     });
 }

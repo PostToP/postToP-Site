@@ -1,14 +1,10 @@
 "use client";
 
+import {useEffect, useState} from "react";
 import AuthBackend from "@/utils/Backend/AuthBackend";
-import { useEffect, useState } from "react";
-import { AuthContext, User } from "../context/AuthContext";
+import {AuthContext, User} from "../context/AuthContext";
 
-export default function AuthProvider({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
+export default function AuthProvider({children}: {children: React.ReactNode}) {
     const [user, setUser] = useState<null | User>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -27,10 +23,7 @@ export default function AuthProvider({
         setUser(null);
     };
 
-    const register = async (
-        username: string,
-        password: string,
-    ) => {
+    const register = async (username: string, password: string) => {
         const register = await AuthBackend.register(username, password);
         if (!register.ok) {
             throw new Error(register.error);
@@ -58,7 +51,6 @@ export default function AuthProvider({
         fetchCurrentUser();
     }, []);
 
-
     useEffect(() => {
         if (user) {
             localStorage.setItem("user", JSON.stringify(user));
@@ -67,8 +59,5 @@ export default function AuthProvider({
         }
     }, [user]);
 
-    return <AuthContext.Provider value={{ user, login, logout, register, loading }}>
-        {children}
-    </AuthContext.Provider>
-
+    return <AuthContext.Provider value={{user, login, logout, register, loading}}>{children}</AuthContext.Provider>;
 }

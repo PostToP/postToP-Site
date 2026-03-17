@@ -1,13 +1,11 @@
 export type NERResult = {
-    ALBUM: string[] | null
-    ARTIST: string[] | null
-    VOCALIST: string[] | null
-    MODIFIER: string[] | null
-    TITLE: string[] | null
-    MISC_PERSON: string[] | null
-}
-
-
+    ALBUM: string[] | null;
+    ARTIST: string[] | null;
+    VOCALIST: string[] | null;
+    MODIFIER: string[] | null;
+    TITLE: string[] | null;
+    MISC_PERSON: string[] | null;
+};
 
 export default function formatNER(ner: NERResult | null, defaultTitle: string, defaultArtist: string) {
     let title = defaultTitle;
@@ -23,5 +21,5 @@ export default function formatNER(ner: NERResult | null, defaultTitle: string, d
         if (nerArtist) artist = `${nerArtist}${modifierStr}`;
     }
 
-    return { title, subtitle: artist };
+    return {title, subtitle: artist};
 }

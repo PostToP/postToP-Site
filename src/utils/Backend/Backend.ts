@@ -8,9 +8,7 @@ export type BackendResponseErrorResponse = {
     error: string;
 };
 
-export type BackendResponse<T = any> =
-    | BackendResponseOkResponse<T>
-    | BackendResponseErrorResponse;
+export type BackendResponse<T = any> = BackendResponseOkResponse<T> | BackendResponseErrorResponse;
 
 export class Backend {
     static _server: string = process.env.NEXT_PUBLIC_SERVER || "http://localhost:8000";
@@ -20,12 +18,12 @@ export class Backend {
         queryParamsOrBody?: Record<string, any> | any,
         path?: string,
     ): Promise<BackendResponse<T>> {
-        let token = ""
-        if (typeof localStorage !== "undefined") // Next.Js server-side functions
+        let token = "";
+        if (typeof localStorage !== "undefined")
+            // Next.Js server-side functions
             token = localStorage.getItem("authToken") || "";
 
-
-        let url = `${Backend._server}${path}`;
+        let url = `${this._server}${path}`;
         const options: RequestInit = {
             method,
             headers: {
@@ -35,7 +33,7 @@ export class Backend {
 
         if ((method === "GET" || method === "DELETE") && queryParamsOrBody) {
             const filteredParams = Object.fromEntries(
-                Object.entries(queryParamsOrBody).filter(([_, v]) => v !== undefined)
+                Object.entries(queryParamsOrBody).filter(([_, v]) => v !== undefined),
             );
             url += `?${new URLSearchParams(filteredParams as Record<string, string>).toString()}`;
         } else if (method === "POST" || method === "PUT" || method === "PATCH") {
@@ -75,46 +73,31 @@ export class Backend {
         };
     }
 
-    protected static async GET<T = any>(
-        path: string,
-        queryParams?: Record<string, any>,
-    ): Promise<BackendResponse<T>> {
-        return Backend.request<T>("GET", queryParams, path);
+    protected static async GET<T = any>(path: string, queryParams?: Record<string, any>): Promise<BackendResponse<T>> {
+        return this.request<T>("GET", queryParams, path);
     }
 
-    protected static async POST<T = any>(
-        path: string,
-        body: any,
-    ): Promise<BackendResponse<T>> {
-        return Backend.request<T>("POST", body, path);
+    protected static async POST<T = any>(path: string, body: any): Promise<BackendResponse<T>> {
+        return this.request<T>("POST", body, path);
     }
 
-    protected static async PATCH<T = any>(
-        path: string,
-        body: any,
-    ): Promise<BackendResponse<T>> {
-        return Backend.request<T>("PATCH", body, path);
+    protected static async PATCH<T = any>(path: string, body: any): Promise<BackendResponse<T>> {
+        return this.request<T>("PATCH", body, path);
     }
 
-    protected static async PUT<T = any>(
-        path: string,
-        body: any,
-    ): Promise<BackendResponse<T>> {
-        return Backend.request<T>("PUT", body, path);
+    protected static async PUT<T = any>(path: string, body: any): Promise<BackendResponse<T>> {
+        return this.request<T>("PUT", body, path);
     }
 
     protected static async DELETE<T = any>(
         path: string,
         queryParams?: Record<string, any>,
     ): Promise<BackendResponse<T>> {
-        return Backend.request<T>("DELETE", queryParams, path);
+        return this.request<T>("DELETE", queryParams, path);
     }
 
-    protected static async GETPROMISE<T = any>(
-        path: string,
-        queryParams?: Record<string, any>,
-    ): Promise<T> {
-        const res = await Backend.GET(path, queryParams);
+    protected static async GETPROMISE<T = any>(path: string, queryParams?: Record<string, any>): Promise<T> {
+        const res = await this.GET(path, queryParams);
         if (!res.ok) {
             throw new Error(res.error);
         }
@@ -122,7 +105,7 @@ export class Backend {
     }
 
     protected static async POSTPROMISE<T = any>(path: string, body: any): Promise<T> {
-        const res = await Backend.POST(path, body);
+        const res = await this.POST(path, body);
         if (!res.ok) {
             throw new Error(res.error);
         }
@@ -130,7 +113,7 @@ export class Backend {
     }
 
     protected static async PUTPROMISE<T = any>(path: string, body: any): Promise<T> {
-        const res = await Backend.PUT(path, body);
+        const res = await this.PUT(path, body);
         if (!res.ok) {
             throw new Error(res.error);
         }
@@ -139,12 +122,12 @@ export class Backend {
 
     static async startNewWorkout(): Promise<
         BackendResponse<{
-            workout: { id: number; startedAt: string; endedAt: string | null };
+            workout: {id: number; startedAt: string; endedAt: string | null};
             new: boolean;
         }>
     > {
         return Backend.POST<{
-            workout: { id: number; startedAt: string; endedAt: string | null };
+            workout: {id: number; startedAt: string; endedAt: string | null};
             new: boolean;
         }>("/api/track", {});
     }

@@ -1,9 +1,8 @@
-import { AuthContext } from "@/context/AuthContext";
-import { useContext } from "react";
+import {useContext} from "react";
+import {AuthContext} from "@/context/AuthContext";
 
 export default function RegisterForm() {
-    const { register } = useContext(AuthContext);
-
+    const {register} = useContext(AuthContext);
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();

@@ -52,7 +52,9 @@ export default function ListenedGraph({user_handle, dateRange}: {user_handle: st
                 }}>
                 <XAxis dataKey="day" tickFormatter={value => formatDate(new Date(value))} />
                 <YAxis width={30} />
-                <Tooltip labelFormatter={value => formatDate(new Date(value))} />
+                <Tooltip labelFormatter={value => formatDate(new Date(value))} contentStyle={{
+                    backgroundColor: "black",
+                }} />
                 <Area
                     type="bump"
                     dataKey="total_minutes"

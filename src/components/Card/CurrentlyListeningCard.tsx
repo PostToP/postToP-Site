@@ -109,9 +109,9 @@ export default function CurrentlyListeningCard({user_handle}: {user_handle: stri
     return (
         <Card>
             {CurrentlyListeningData?.video && CurrentlyListeningData?.listeningData ? (
-                <div className="grid grid-cols-[1fr_5fr] gap-4 size-full">
-                    <div>
-                        <div className="aspect-square w-64 overflow-hidden rounded-lg">
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_5fr] gap-3 md:gap-4 size-full">
+                    <div className="flex justify-center md:block">
+                        <div className="aspect-square w-48 md:w-64 overflow-hidden rounded-lg">
                             {CurrentlyListeningData.video.coverImage && (
                                 <div
                                     className={
@@ -126,20 +126,39 @@ export default function CurrentlyListeningCard({user_handle}: {user_handle: stri
                         </div>
                     </div>
 
-                    <div className="flex flex-col space-y-1 h-full justify-between">
-                        <h3 className="text-text-secondary">Currently Playing</h3>
-                        <div>
-                            <h3 className="line-clamp-1 font-medium text-lg">{title}</h3>
-                            <p className="line-clamp-1 text-text-secondary">{subtitle}</p>
+                    <div className="flex flex-col space-y-2 md:space-y-1 h-full justify-between">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-xs md:text-sm text-text-secondary">Currently Playing</h3>
+                            <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                                CurrentlyListeningData.listeningData.status === VideoStatus.PLAYING || 
+                                CurrentlyListeningData.listeningData.status === VideoStatus.STARTED
+                                    ? 'bg-accent-primary/20 text-accent-primary'
+                                    : 'bg-disabled text-text-secondary'
+                            }`}>
+                                <span>{CurrentlyListeningData.listeningData.status === VideoStatus.PAUSED ? '⏸' : '▶'}</span>
+                                <span>{CurrentlyListeningData.listeningData.status === VideoStatus.PAUSED ? 'Paused' : 'Playing'}</span>
+                            </div>
                         </div>
-                        <div className="space-y-1 mt-4">
-                            <div className="w-full bg-disabled rounded-full h-1">
+                        <div>
+                            <h3 className="line-clamp-2 md:line-clamp-1 font-medium text-base md:text-lg">{title}</h3>
+                            <p className="line-clamp-2 md:line-clamp-1 text-xs md:text-sm text-text-secondary">{subtitle}</p>
+                        </div>
+                        <div className="space-y-2 md:space-y-1 mt-2 md:mt-4">
+                            <div className="w-full bg-disabled rounded-full h-2 md:h-1">
                                 <div
-                                    className="bg-accent-primary h-1 rounded-full transition-all duration-1000 ease-linear relative"
+                                    className={`h-2 md:h-1 rounded-full transition-all duration-1000 ease-linear relative ${
+                                        CurrentlyListeningData.listeningData.status === VideoStatus.PAUSED
+                                            ? 'bg-text-secondary/50'
+                                            : 'bg-accent-primary'
+                                    }`}
                                     style={{
                                         width: `${Math.min(100, ((CurrentlyListeningData.listeningData.currentTime + elapsedTime) / CurrentlyListeningData.video.duration) * 100)}%`,
                                     }}>
-                                    <div className="size-4 absolute -right-2 bg-accent-primary rounded-full -translate-1/2 top-1/2" />
+                                    <div className={`size-3 md:size-4 absolute -right-1.5 md:-right-2 rounded-full -translate-1/2 top-1/2 ${
+                                        CurrentlyListeningData.listeningData.status === VideoStatus.PAUSED
+                                            ? 'bg-text-secondary'
+                                            : 'bg-accent-primary'
+                                    }`} />
                                 </div>
                             </div>
                             <div className="flex justify-between text-xs text-text-secondary">
@@ -152,7 +171,7 @@ export default function CurrentlyListeningCard({user_handle}: {user_handle: stri
                     </div>
                 </div>
             ) : (
-                <div className="flex items-center justify-center py-12 text-text-secondary">
+                <div className="flex items-center justify-center py-8 md:py-12 text-text-secondary text-sm md:text-base">
                     Currently not listening to anything.
                 </div>
             )}

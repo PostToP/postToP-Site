@@ -20,11 +20,11 @@ const TopMusicModal = forwardRef<any, TopMusicModalProps>(({userId, initialDateR
     return (
         <Modal ref={ref}>
             <div className="p-6 border-b border-gray-200">
-                <h2 className="text-2xl font-semibold text-gray-800">Top Tracks</h2>
+                <h2 className="text-2xl font-semibold">Top Tracks</h2>
                 <p className="text-sm text-gray-500 mt-1">Explore your most played tracks</p>
             </div>
 
-            <div className="p-6 border-b border-gray-200 bg-gray-50">
+            <div className="p-6 border-b border-gray-200 bg-surface-secondary">
                 <DateSelector onDateChange={setDateRange} />
             </div>
 

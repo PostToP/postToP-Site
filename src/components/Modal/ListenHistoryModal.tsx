@@ -13,7 +13,7 @@ const ListenHistoryModal = forwardRef<any, ListenHistoryModalProps>(({userId}, r
     return (
         <Modal ref={ref}>
             <div className="p-6 border-b border-gray-200">
-                <h2 className="text-2xl font-semibold text-gray-800">Listen History</h2>
+                <h2 className="text-2xl font-semibold">Listen History</h2>
                 <p className="text-sm text-gray-500 mt-1">Browse your complete listening history</p>
             </div>
 

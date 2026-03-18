@@ -36,7 +36,7 @@ const Modal = forwardRef(
                 onClick={() => setIsOpen(false)}
                 onKeyDown={e => e.key === "Escape" && setIsOpen(false)}>
                 <div
-                    className="bg-white rounded-xl shadow-2xl w-[90%] max-w-4xl h-[90vh] flex flex-col overflow-hidden"
+                    className="bg-surface rounded-xl shadow-2xl w-[90%] max-w-4xl h-[90vh] flex flex-col overflow-hidden"
                     onClick={e => e.stopPropagation()}
                     onKeyDown={e => e.stopPropagation()}
                     role="dialog"

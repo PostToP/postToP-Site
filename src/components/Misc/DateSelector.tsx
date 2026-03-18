@@ -53,7 +53,7 @@ export default function DateSelector({onDateChange}: {onDateChange?: (dateRange:
         <div className="mb-6">
             <label className="text-sm font-medium text-text-secondary mr-3">Time Period:</label>
             <select
-                className="px-4 py-2 rounded-lg border border-gray-300 bg-white hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="px-4 py-2 rounded-lg border border-gray-300 bg-surface hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 onChange={e => {
                     const selected = Data.find(item => item.name === e.target.value);
                     if (selected && onDateChange) {

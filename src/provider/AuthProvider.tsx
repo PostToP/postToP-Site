@@ -23,8 +23,8 @@ export default function AuthProvider({children}: {children: React.ReactNode}) {
         setUser(null);
     };
 
-    const register = async (username: string, password: string) => {
-        const register = await AuthBackend.register(username, password);
+    const register = async (username: string, password: string, email: string) => {
+        const register = await AuthBackend.register(username, password, email);
         if (!register.ok) {
             throw new Error(register.error);
         }

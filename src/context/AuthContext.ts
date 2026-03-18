@@ -11,7 +11,7 @@ export const AuthContext = createContext<{
     loading: boolean;
     login: (username: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
-    register: (username: string, password: string) => Promise<void>;
+    register: (username: string, password: string, email: string) => Promise<void>;
 }>({
     user: null,
     loading: true,

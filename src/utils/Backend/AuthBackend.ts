@@ -6,7 +6,7 @@ export default class AuthBackend extends Backend {
         return AuthBackend.request("POST", {username, password}, "/auth");
     }
 
-    static async register(username: string, password: string): Promise<BackendResponse<{token: string}>> {
-        return AuthBackend.request("POST", {username, password}, "/register");
+    static async register(username: string, password: string, email: string): Promise<BackendResponse<{token: string}>> {
+        return AuthBackend.request("POST", {username, password, email}, "/register");
     }
 }

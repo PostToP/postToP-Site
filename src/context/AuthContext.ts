@@ -12,6 +12,7 @@ export const AuthContext = createContext<{
     login: (username: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
     register: (username: string, password: string, email: string) => Promise<void>;
+    setUser: (user: User | null) => void;
 }>({
     user: null,
     loading: true,
@@ -23,5 +24,8 @@ export const AuthContext = createContext<{
     },
     register: async () => {
         console.log("register function not implemented");
+    },
+    setUser: () => {
+        console.log("setUser function not implemented");
     },
 });

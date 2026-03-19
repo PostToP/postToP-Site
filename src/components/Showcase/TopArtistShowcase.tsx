@@ -30,21 +30,20 @@ export default function TopArtistShowcase({
         fetchTopMusic();
     }, [user_handle, dateRange]);
 
-    if (topArtists.length < 3) {
-        return <div>Loading top artists...</div>;
-    }
-
     return (
-        <Card>
+        <Card className="relative">
             <h2 className="text-xl font-medium">Top Artists</h2>
             <ul className="flex flex-col gap-2 mt-4 mb-4 divide-y">
+                {topArtists.length === 0 && (
+                    <p className="text-sm text-text-secondary">No top artists found for the selected date range.</p>
+                )}
                 {topArtists.slice(0, 5).map((artist, i) => (
                     <ArtistCard key={`top-artist-${i}`} artist={artist} />
                 ))}
             </ul>
             <button
                 type="button"
-                className="text-text-secondary hover:underline cursor-pointer"
+                className="text-text-secondary hover:underline cursor-pointer absolute bottom-4 right-4 text-sm"
                 onClick={() => modalRef.current.open()}>
                 View more ➤
             </button>

@@ -40,6 +40,10 @@ export default function TopGenreRadarChart({
         fetchTopGenres();
     }, [user_handle, dateRange]);
 
+    if (topGenres.length === 0) {
+        return <div>No genres found for the selected date range.</div>;
+    }
+
     return (
         <>
             <RadarChart
@@ -53,9 +57,15 @@ export default function TopGenreRadarChart({
                     right: 50,
                     bottom: 50,
                 }}>
-                <PolarGrid />
-                <PolarAngleAxis dataKey="genre_name" />
-                <Radar dataKey="listen_count" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+                <PolarGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                <PolarAngleAxis dataKey="genre_name" style={{fontSize: "12px"}} />
+                <Radar
+                    dataKey="listen_count"
+                    stroke="#8884d8"
+                    fill="#8884d8"
+                    fillOpacity={0.6}
+                    animationDuration={800}
+                />
             </RadarChart>
         </>
     );

@@ -19,6 +19,13 @@ export default function UserDropdownMenu() {
             icon: null,
             href: "/settings",
         },
+        authContext.user?.role === "Admin"
+            ? {
+                  label: "Admin Dashboard",
+                  icon: null,
+                  href: "/admin",
+              }
+            : null,
         {
             label: "Logout",
             icon: null,
@@ -85,7 +92,7 @@ export default function UserDropdownMenu() {
                                     aria-orientation="vertical"
                                     aria-labelledby="options-menu"
                                     id="options-menu">
-                                    {dropdownElements.map((element, index) =>
+                                    {dropdownElements.filter(i=>i !==null).map((element, index) =>
                                         element.href ? (
                                             <Link
                                                 key={`link-${index}`}

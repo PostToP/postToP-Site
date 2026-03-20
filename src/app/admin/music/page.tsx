@@ -1,8 +1,9 @@
 "use client";
 
-import {useEffect, useRef, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import Card from "@/components/Card/Card";
 import AdminBackend from "@/utils/Backend/AdminBackend";
+import { AuthContext } from "@/context/AuthContext";
 
 async function submitReview(watchID: string, isMusic: boolean) {
     try {
@@ -13,6 +14,10 @@ async function submitReview(watchID: string, isMusic: boolean) {
 }
 
 export default function Page() {
+    const authContext = useContext(AuthContext);
+    if (!authContext.loading && (!authContext.user || authContext.user.role !== "Admin")) {
+        return null;
+    }
     const [res, setRes] = useState({} as any);
     const [left, setLeft] = useState(0);
     const resRef = useRef(res);
@@ -21,6 +26,8 @@ export default function Page() {
     useEffect(() => {
         resRef.current = res;
     }, [res]);
+
+    
 
     function showNext() {
         setPlayerHidden(true);

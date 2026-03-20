@@ -1,35 +1,95 @@
+"use client";
+
 import Link from "next/link";
+import {useContext, useEffect, useState} from "react";
 import Card from "@/components/Card/Card";
+import {AuthContext} from "@/context/AuthContext";
 import ServerBackend from "@/utils/Backend/ServerBackend";
 
-export let revalidate = 60 * 60 * 1;
+interface ServerStats {
+    activeUsers: number | string;
+    connectedUsers: number | string;
+    musicVideos: number | string;
+    musicArtists: number | string;
+    totalListenedHours: number | string;
+}
 
-export default async function Home() {
-    const serverStats = await ServerBackend.getStats();
-    if (!serverStats.ok) {
-        console.error("Failed to fetch server stats:", serverStats.error);
+declare global {
+    interface Window {
+        __postToPInjected?: boolean;
     }
+}
+
+export default function Home() {
+    const {user, loading} = useContext(AuthContext);
+    const [extensionInstalled, setExtensionInstalled] = useState(false);
+    const [serverStats, setServerStats] = useState<ServerStats | null>(null);
+
+    useEffect(() => {
+        const fetchServerStats = async () => {
+            const response = await ServerBackend.getStats();
+            if (!response.ok) {
+                console.error("Failed to fetch server stats:", response.error);
+                setServerStats(null);
+                return;
+            }
+
+            setServerStats(response.data.data);
+        };
+
+        const fetchExtensionInstalled = () => {
+            let timeoutId: NodeJS.Timeout | null = null;
+
+            const checkExtension = () => {
+                // TODO
+                if (window.__postToPInjected) {
+                    setExtensionInstalled(true);
+                } else {
+                    timeoutId = setTimeout(checkExtension, 1000);
+                }
+            };
+            checkExtension();
+
+            return () => {
+                if (timeoutId) clearTimeout(timeoutId);
+            };
+        };
+
+        fetchServerStats();
+        const cleanup = fetchExtensionInstalled();
+
+        return cleanup;
+    }, []);
+
+    const isLoggedIn = !loading && !!user;
+    const profileHref = user ? `/user/${user.handle}` : "/auth";
 
     return (
         <main className="space-y-4">
             <Card>
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-6 md:space-y-0 py-8">
                     <div className="space-y-2">
-                        <h1 className="text-5xl font-bold text-text-primary">PostTop</h1>
+                        <h1 className="text-5xl font-bold text-text-primary">
+                            {isLoggedIn ? `Welcome back, ${user?.username}` : "PostTop"}
+                        </h1>
                         <p className="text-xl text-text-secondary">
-                            Track your music listening habits in real-time on YouTube
+                            {isLoggedIn
+                                ? "Your listening data is live. Jump back into your profile and latest stats."
+                                : "Track your music listening habits in real-time on YouTube"}
                         </p>
                     </div>
                     <div className="flex gap-3">
                         <Link
-                            href="/auth"
+                            href={isLoggedIn ? profileHref : "/auth"}
                             className="px-6 py-2 bg-accent-primary text-white font-medium rounded-lg hover:bg-opacity-90 transition-all">
-                            Get Started
+                            {isLoggedIn ? "Open Profile" : "Get Started"}
                         </Link>
                         <Link
-                            href="/auth"
+                            href={
+                                user?.role === "Admin" ? "/admin" : isLoggedIn ? `/user/${user?.handle}/embed` : "/auth"
+                            }
                             className="px-6 py-2 bg-background-tertiary text-text-primary font-medium rounded-lg hover:bg-background-secondary transition-all">
-                            Sign In
+                            {user?.role === "Admin" ? "Admin Panel" : isLoggedIn ? "Weekly Embed" : "Sign In"}
                         </Link>
                     </div>
                 </div>
@@ -40,11 +100,9 @@ export default async function Home() {
                     <Card>
                         <div className="space-y-2">
                             <p className="text-text-secondary text-sm">Active Clients</p>
-                            <p className="text-3xl font-bold text-text-primary">
-                                {serverStats.ok ? serverStats.data.data.activeUsers : "N/A"}
-                            </p>
+                            <p className="text-3xl font-bold text-text-primary">{serverStats?.activeUsers ?? "N/A"}</p>
                             <p className="text-xs text-accent-primary">
-                                {serverStats.ok ? serverStats.data.data.connectedUsers : "N/A"} actively listening
+                                {serverStats?.connectedUsers ?? "N/A"} actively listening
                             </p>
                         </div>
                     </Card>
@@ -53,9 +111,7 @@ export default async function Home() {
                     <Card>
                         <div className="space-y-2">
                             <p className="text-text-secondary text-sm">Songs Tracked</p>
-                            <p className="text-3xl font-bold text-text-primary">
-                                {serverStats.ok ? serverStats.data.data.musicVideos : "N/A"}
-                            </p>
+                            <p className="text-3xl font-bold text-text-primary">{serverStats?.musicVideos ?? "N/A"}</p>
                             <p className="text-xs text-text-secondary">Total songs tracked</p>
                         </div>
                     </Card>
@@ -64,9 +120,7 @@ export default async function Home() {
                     <Card>
                         <div className="space-y-2">
                             <p className="text-text-secondary text-sm">Artists Tracked</p>
-                            <p className="text-3xl font-bold text-text-primary">
-                                {serverStats.ok ? serverStats.data.data.musicArtists : "N/A"}
-                            </p>
+                            <p className="text-3xl font-bold text-text-primary">{serverStats?.musicArtists ?? "N/A"}</p>
                             <p className="text-xs text-text-secondary">All genres</p>
                         </div>
                     </Card>
@@ -76,7 +130,7 @@ export default async function Home() {
                         <div className="space-y-2">
                             <p className="text-text-secondary text-sm">Listening Hours</p>
                             <p className="text-3xl font-bold text-text-primary">
-                                {serverStats.ok ? Math.round(serverStats.data.data.totalListenedHours) : "N/A"}
+                                {serverStats ? Math.round(Number(serverStats.totalListenedHours)) : "N/A"}
                             </p>
                             <p className="text-xs text-text-secondary">Total tracked</p>
                         </div>
@@ -192,9 +246,16 @@ export default async function Home() {
                                         <span className="text-2xl text-accent-primary font-bold">1</span>
                                         <div>
                                             <h4 className="font-medium text-text-primary">Create an Account</h4>
-                                            <p className="text-sm text-text-secondary">
-                                                Sign up quickly with your email to get started
-                                            </p>
+                                            {isLoggedIn ? (
+                                                <p className="text-sm text-accent-primary">
+                                                    You're already signed in. Just head to your profile and start
+                                                    sharing!
+                                                </p>
+                                            ) : (
+                                                <p className="text-sm text-text-secondary">
+                                                    Sign up quickly with your email to get started
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -203,9 +264,15 @@ export default async function Home() {
                                         <span className="text-2xl text-accent-primary font-bold">2</span>
                                         <div>
                                             <h4 className="font-medium text-text-primary">Download the Extension</h4>
-                                            <p className="text-sm text-text-secondary">
-                                                Install our browser extension to connect with YouTube
-                                            </p>
+                                            {extensionInstalled ? (
+                                                <p className="text-sm text-accent-primary">
+                                                    Extension detected! You're all set to share your music.
+                                                </p>
+                                            ) : (
+                                                <p className="text-sm text-text-secondary">
+                                                    Install our browser extension to connect with YouTube
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -250,18 +317,23 @@ export default async function Home() {
                 <div className="col-span-4">
                     <Card>
                         <div className="space-y-4 h-full flex flex-col">
-                            <h2 className="text-xl font-medium">Ready to start?</h2>
+                            <h2 className="text-xl font-medium">{isLoggedIn ? "Welcome back" : "Ready to start?"}</h2>
                             <p className="text-text-secondary text-sm">
-                                Join thousands of music lovers tracking their listening journey. Get started in less
-                                than a minute.
+                                {isLoggedIn
+                                    ? "Jump into your profile or embed and keep sharing your weekly top tracks."
+                                    : "Join thousands of music lovers tracking their listening journey. Get started in less than a minute."}
                             </p>
                             <div className="flex-1" />
                             <Link
-                                href="/auth"
+                                href={isLoggedIn ? profileHref : "/auth"}
                                 className="block text-center px-6 py-3 bg-accent-primary text-white font-medium rounded-lg hover:bg-opacity-90 transition-all">
-                                Create Free Account
+                                {isLoggedIn ? "Open Your Profile" : "Create Free Account"}
                             </Link>
-                            <p className="text-xs text-text-secondary text-center">No credit card required</p>
+                            <p className="text-xs text-text-secondary text-center">
+                                {isLoggedIn
+                                    ? "Your dashboard updates automatically while you listen."
+                                    : "No credit card required"}
+                            </p>
                         </div>
                     </Card>
                 </div>

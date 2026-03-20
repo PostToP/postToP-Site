@@ -1,8 +1,9 @@
 "use client";
 
-import {useEffect, useRef, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import Card from "@/components/Card/Card";
 import AdminBackend from "@/utils/Backend/AdminBackend";
+import { AuthContext } from "@/context/AuthContext";
 
 async function submitReview(watchID: string, genres: string[]) {
     try {
@@ -56,11 +57,14 @@ export default function Page() {
         "Christian",
         "Traditional Music",
     ];
+    const authContext = useContext(AuthContext);
+    if (!authContext.loading && (!authContext.user || authContext.user.role !== "Admin")) {
+        return null;
+    }
     const [res, setRes] = useState({} as any);
     const [left, setLeft] = useState(0);
     const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
     const resRef = useRef(res);
-    const [chosicData, setChosicData] = useState<any>(null);
     useEffect(() => {
         resRef.current = res;
     }, [res]);
@@ -73,7 +77,6 @@ export default function Page() {
             music: "true",
         })
             .then(response => {
-                setChosicData(null);
                 if (response.ok) {
                     setRes(response.data.videos[0]);
                     setLeft(response.data.pagination.totalVideos);
@@ -175,21 +178,6 @@ export default function Page() {
                             <h2 className="text-lg font-semibold leading-snug">{res.title}</h2>
                         </div>
                         <p className="text-sm text-text-secondary leading-relaxed line-clamp-6">{res.description}</p>
-                        <p>
-                            {chosicData ? (
-                                <>
-                                    <span className="text-sm text-text-secondary">Chosic genre guess:</span>
-                                    <span>{chosicData.track.name}</span>
-                                    <span className="font-semibold ml-2">
-                                        {Array.isArray(chosicData.genre.artists[0].genres)
-                                            ? chosicData.genre.artists[0].genres.join(", ")
-                                            : chosicData.genre.artists[0].genres}
-                                    </span>
-                                </>
-                            ) : (
-                                <span className="text-sm text-text-secondary">Loading Chosic genre guess...</span>
-                            )}
-                        </p>
                         <button
                             type="button"
                             onClick={showNext}

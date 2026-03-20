@@ -4,6 +4,8 @@ export interface User {
     id: string;
     username: string;
     handle: string;
+    email: string;
+    role: "User" | "Admin";
 }
 
 export const AuthContext = createContext<{

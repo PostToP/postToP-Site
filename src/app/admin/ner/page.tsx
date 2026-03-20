@@ -1,8 +1,9 @@
 "use client";
 
-import {useEffect, useRef, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import Card from "@/components/Card/Card";
 import AdminBackend from "@/utils/Backend/AdminBackend";
+import { AuthContext } from "@/context/AuthContext";
 
 function sendReview(data: any) {
     return AdminBackend.submitNERReview(data);
@@ -161,6 +162,10 @@ function unicodeToUtf16Index(text: string, unicodeIndex: number): number {
 }
 
 export default function Page() {
+    const authContext = useContext(AuthContext);
+    if (!authContext.loading && (!authContext.user || authContext.user.role !== "Admin")) {
+        return null;
+    }
     const [res, setRes] = useState({} as any);
     const selectedText = useRef<{start: number; end: number; selectedText: string; source: string} | null>(null);
     const [nerElements, setNerElements] = useState<any[]>([]);
@@ -170,6 +175,7 @@ export default function Page() {
     useEffect(() => {
         resRef.current = res;
     }, [res]);
+
 
     function showNext() {
         AdminBackend.getVideos({

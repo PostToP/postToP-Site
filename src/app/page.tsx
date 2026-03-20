@@ -14,12 +14,6 @@ interface ServerStats {
     totalListenedHours: number | string;
 }
 
-declare global {
-    interface Window {
-        __postToPInjected?: boolean;
-    }
-}
-
 export default function Home() {
     const {user, loading} = useContext(AuthContext);
     const [extensionInstalled, setExtensionInstalled] = useState(false);
@@ -38,20 +32,14 @@ export default function Home() {
         };
 
         const fetchExtensionInstalled = () => {
-            let timeoutId: NodeJS.Timeout | null = null;
-
-            const checkExtension = () => {
-                // TODO
-                if (window.__postToPInjected) {
-                    setExtensionInstalled(true);
-                } else {
-                    timeoutId = setTimeout(checkExtension, 1000);
-                }
+            const handleExtensionPing = e => {
+                setExtensionInstalled(true);
             };
-            checkExtension();
+
+            window.addEventListener("POSTTOP_INSTALLED", handleExtensionPing);
 
             return () => {
-                if (timeoutId) clearTimeout(timeoutId);
+                window.removeEventListener("POSTTOP_INSTALLED", handleExtensionPing);
             };
         };
 
@@ -270,7 +258,12 @@ export default function Home() {
                                                 </p>
                                             ) : (
                                                 <p className="text-sm text-text-secondary">
-                                                    Install our browser extension to connect with YouTube
+                                                    Install our browser extension to connect with YouTube from{" "}
+                                                    <a
+                                                        href="https://github.com/PostToP/postToP-Extension"
+                                                        className="text-accent-primary hover:underline">
+                                                        GitHub
+                                                    </a>
                                                 </p>
                                             )}
                                         </div>

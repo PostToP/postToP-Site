@@ -32,7 +32,7 @@ export default function Home() {
         };
 
         const fetchExtensionInstalled = () => {
-            const handleExtensionPing = e => {
+            const handleExtensionPing = (_: any) => {
                 setExtensionInstalled(true);
             };
 

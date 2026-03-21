@@ -76,4 +76,8 @@ export default class UserBackend extends Backend {
 
         return UserBackend.PUT(`/user/${user_handle}`, filteredUpdates);
     }
+
+    static async deleteUserAccount(user_handle: string): Promise<BackendResponse<null>> {
+        return UserBackend.DELETE(`/user/${user_handle}`);
+    }
 }

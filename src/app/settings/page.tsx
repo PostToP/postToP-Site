@@ -3,6 +3,7 @@
 import {useRouter} from "next/navigation";
 import {type FormEvent, useContext, useEffect, useState} from "react";
 import Card from "@/components/Card/Card";
+import DeleteConfirmationModal from "@/components/Modal/DeleteConfirmationModal";
 import {AuthContext} from "@/context/AuthContext";
 import UserBackend, {type UserProfile, type UserUpdatePayload} from "@/utils/Backend/UserBackend";
 
@@ -31,6 +32,7 @@ export default function SettingsPage() {
     const [profileLoading, setProfileLoading] = useState(true);
     const [status, setStatus] = useState<"idle" | "saving" | "error" | "success">("idle");
     const [error, setError] = useState<string | null>(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     useEffect(() => {
         if (!loading && !user) {
@@ -63,6 +65,17 @@ export default function SettingsPage() {
 
     const handleChange = (field: keyof FormState, value: string) => {
         setForm(prev => ({...prev, [field]: value}));
+    };
+
+    const handleDeleteAccount = () => {
+        UserBackend.deleteUserAccount(user!.handle).then(res => {
+            if (res.ok) {
+                setUser(null);
+                router.replace("/auth");
+            } else {
+                setError(res.error);
+            }
+        });
     };
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -213,9 +226,32 @@ export default function SettingsPage() {
                         className="rounded-lg bg-accent-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-60">
                         {status === "saving" ? "Saving..." : "Save changes"}
                     </button>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setForm(emptyForm);
+                            setStatus("idle");
+                            setError(null);
+                        }}
+                        disabled={status === "saving" || profileLoading}
+                        className="rounded-lg border border-border bg-surface px-4 py-2 text-sm text-text-primary shadow-sm transition hover:bg-surface-hover disabled:cursor-not-allowed disabled:opacity-60">
+                        Reset
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setIsDeleteModalOpen(true)}
+                        className="rounded-lg border border-red-600 bg-red-50 px-4 py-2 text-sm text-red-600 shadow-sm transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60">
+                        Delete account
+                    </button>
                     {status === "saving" && <span className="text-sm text-text-secondary">Updating your profile…</span>}
                 </div>
             </form>
+
+            <DeleteConfirmationModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={handleDeleteAccount}
+            />
         </div>
     );
 }

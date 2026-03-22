@@ -12,6 +12,25 @@ export interface Data {
     musicVideos: string;
     musicArtists: string;
     totalListenedHours: number;
+    is_music: IsMusic;
+    genres: Genres;
+    ner: Ner;
+    totalVideos: number;
+}
+
+export interface IsMusic {
+    reviewed: number;
+    predicted: number;
+}
+
+export interface Genres {
+    reviewed: number;
+    predicted: number;
+}
+
+export interface Ner {
+    reviewed: number;
+    predicted: number;
 }
 
 export default class ServerBackend extends Backend {

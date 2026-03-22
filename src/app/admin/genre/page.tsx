@@ -2,8 +2,8 @@
 
 import {useContext, useEffect, useRef, useState} from "react";
 import Card from "@/components/Card/Card";
+import {AuthContext} from "@/context/AuthContext";
 import AdminBackend from "@/utils/Backend/AdminBackend";
-import { AuthContext } from "@/context/AuthContext";
 
 async function submitReview(watchID: string, genres: string[]) {
     try {
@@ -58,9 +58,6 @@ export default function Page() {
         "Traditional Music",
     ];
     const authContext = useContext(AuthContext);
-    if (!authContext.loading && (!authContext.user || authContext.user.role !== "Admin")) {
-        return null;
-    }
     const [res, setRes] = useState({} as any);
     const [left, setLeft] = useState(0);
     const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
@@ -68,6 +65,10 @@ export default function Page() {
     useEffect(() => {
         resRef.current = res;
     }, [res]);
+
+    if (!authContext.loading && (!authContext.user || authContext.user.role !== "Admin")) {
+        return null;
+    }
 
     function showNext() {
         AdminBackend.getVideos({

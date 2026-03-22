@@ -72,13 +72,6 @@ export default function Home() {
                             className="px-6 py-2 bg-accent-primary text-white font-medium rounded-lg hover:bg-opacity-90 transition-all">
                             {isLoggedIn ? "Open Profile" : "Get Started"}
                         </Link>
-                        <Link
-                            href={
-                                user?.role === "Admin" ? "/admin" : isLoggedIn ? `/user/${user?.handle}/embed` : "/auth"
-                            }
-                            className="px-6 py-2 bg-background-tertiary text-text-primary font-medium rounded-lg hover:bg-background-secondary transition-all">
-                            {user?.role === "Admin" ? "Admin Panel" : isLoggedIn ? "Weekly Embed" : "Sign In"}
-                        </Link>
                     </div>
                 </div>
             </Card>
@@ -148,8 +141,7 @@ export default function Home() {
                             <h3 className="text-xl font-medium text-text-primary">Real-Time Music Sharing</h3>
                             <p className="text-text-secondary">
                                 Share what you're listening to in real-time via{" "}
-                                <span className="text-accent-primary">Websocket</span> or{" "}
-                                <span className="text-accent-primary">Embeds</span>. Keep your followers updated with
+                                <span className="text-accent-primary">Websocket</span>. Keep your followers updated with
                                 live progress tracking.
                             </p>
                             <div className="flex-1" />
@@ -313,7 +305,7 @@ export default function Home() {
                             <h2 className="text-xl font-medium">{isLoggedIn ? "Welcome back" : "Ready to start?"}</h2>
                             <p className="text-text-secondary text-sm">
                                 {isLoggedIn
-                                    ? "Jump into your profile or embed and keep sharing your weekly top tracks."
+                                    ? "Jump into your profile and keep sharing your weekly top tracks."
                                     : "Join thousands of music lovers tracking their listening journey. Get started in less than a minute."}
                             </p>
                             <div className="flex-1" />

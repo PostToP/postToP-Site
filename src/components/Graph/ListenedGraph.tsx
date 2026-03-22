@@ -7,15 +7,16 @@ export default function ListenedGraph({user_handle, dateRange}: {user_handle: st
     const [data, setData] = useState<any>({});
     useEffect(() => {
         async function fetchTopMusic() {
+            const defaultStart = new Date(new Date().setDate(new Date().getDate() - 7));
+            const defaultEnd = new Date();
+
             const response = await UserBackend.getUserStats(user_handle, {
-                startDate:
-                    dateRange?.startDate.toISOString() ??
-                    new Date(new Date().setDate(new Date().getDate() - 7)).toISOString(),
-                endDate: dateRange?.endDate.toISOString() ?? new Date().toISOString(),
+                startDate: (dateRange?.startDate ?? defaultStart).toISOString(),
+                endDate: (dateRange?.endDate ?? defaultEnd).toISOString(),
             });
             if (response.ok) {
-                const start = dateRange?.startDate || new Date();
-                const end = dateRange?.endDate || new Date();
+                const start = dateRange?.startDate || defaultStart;
+                const end = dateRange?.endDate || defaultEnd;
                 const dayInMs = 24 * 60 * 60 * 1000;
                 const daysMap: {[key: string]: any} = {};
                 for (let d = new Date(start); d <= end; d = new Date(d.getTime() + dayInMs)) {
@@ -52,9 +53,12 @@ export default function ListenedGraph({user_handle, dateRange}: {user_handle: st
                 }}>
                 <XAxis dataKey="day" tickFormatter={value => formatDate(new Date(value))} />
                 <YAxis width={30} />
-                <Tooltip labelFormatter={value => formatDate(new Date(value))} contentStyle={{
-                    backgroundColor: "black",
-                }} />
+                <Tooltip
+                    labelFormatter={value => formatDate(new Date(value))}
+                    contentStyle={{
+                        backgroundColor: "black",
+                    }}
+                />
                 <Area
                     type="bump"
                     dataKey="total_minutes"
